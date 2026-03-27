@@ -1,0 +1,8 @@
+<View>
+  <Text name="text" value="$text" granularity="word"/>
+  <Header value="Sentiment Classification"/>
+  <Choices name="sentiment" toName="text" choice="single" showInLine="true">
+    <Choice value="positive"/>
+    <Choice value="negative"/>
+  </Choices>
+</View>

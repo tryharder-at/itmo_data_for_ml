@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/jupyter nbconvert:*)",
+      "Bash(ls -lh \"/Users/trof1mov/Documents/itmo data for ml/data/raw/qplot_\"*)",
+      "Bash(.venv/bin/python -c \"import torch; print\\(''torch'', torch.__version__\\)\")",
+      "Bash(pip3 index:*)",
+      "Bash(.venv/bin/pip install:*)",
+      "Bash(.venv/bin/python -c \"import torch, transformers, sklearn; print\\(''torch'', torch.__version__, ''| transformers'', transformers.__version__, ''| sklearn'', sklearn.__version__\\)\")",
+      "Bash(python3 -c \":*)",
+      "Bash(.venv/bin/python -c \":*)",
+      "Bash(.venv/bin/python skills/collect/scripts/run_collect.py)",
+      "Bash(.venv/bin/python skills/annotate/scripts/run_annotate.py)"
+    ]
+  }
+}

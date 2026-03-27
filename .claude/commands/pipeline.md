@@ -1,0 +1,1 @@
+Read the file `skills/pipeline/SKILL.md` and execute the master pipeline skill following the instructions exactly.

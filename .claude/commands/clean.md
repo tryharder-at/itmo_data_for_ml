@@ -1,0 +1,1 @@
+Read the file `skills/clean/SKILL.md` and execute the skill following the instructions exactly.

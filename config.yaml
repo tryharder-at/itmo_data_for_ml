@@ -1,0 +1,51 @@
+agent:
+  name: DataCollectionAgent
+  version: "1.0"
+  request_delay: 0.4      # seconds between HTTP requests (polite scraping)
+
+# ML Task: Binary sentiment classification (positive / negative)
+# Unified label values: "positive", "negative"
+
+sources:
+  # --- Source 1: HuggingFace IMDB movie reviews ---
+  - type: hf_dataset
+    name: imdb
+    split: train
+    sample_size: 1000
+    text_column: text
+    label_column: label
+    label_map:
+      "0": negative
+      "1": positive
+    source_name: imdb_huggingface
+
+  # --- Source 2: Amazon product reviews (actual review text, binary sentiment) ---
+  # amazon_polarity: 0 = 1-2 stars (negative), 1 = 4-5 stars (positive)
+  - type: hf_dataset
+    name: amazon_polarity
+    split: train
+    sample_size: 700
+    text_column: content   # full review text (not title)
+    label_column: label
+    label_map:
+      "0": negative
+      "1": positive
+    source_name: amazon_reviews
+
+  # --- Source 3: Yelp business reviews (actual review text, binary sentiment) ---
+  # yelp_polarity: 1 = 1-2 stars (negative), 2 = 4-5 stars (positive)
+  - type: hf_dataset
+    name: yelp_polarity
+    split: train
+    sample_size: 300
+    text_column: text
+    label_column: label
+    label_map:
+      "0": negative
+      "1": positive
+    source_name: yelp_reviews
+
+output:
+  dir: data/raw
+  unified_file: unified_dataset.csv
+  save_individual: true
