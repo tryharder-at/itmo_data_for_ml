@@ -1,0 +1,312 @@
+task 1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ЦЕЛЬ
+
+Написать агента, который умеет собирать данные из нескольких источников и возвращает унифицированный датасет. 
+
+АРХИТЕКТУРА АГЕНТА
+
+- DataCollectionAgent
+- skill: scrape(url, selector) → DataFrame
+- skill: fetch_api(endpoint, params) → DataFrame
+- skill: load_dataset(name, source='hf'|'kaggle') → DataFrame
+- skill: merge(sources: list[DataFrame]) → DataFrame
+
+ТЕХНИЧЕСКИЙ КОНТРАКТ
+
+from data_collection_agent import DataCollectionAgent
+
+agent = DataCollectionAgent(config='config.yaml')
+df = agent.run(sources=[
+    {'type': 'hf_dataset', 'name': 'imdb'},
+    {'type': 'scrape', 'url': '...', 'selector': '...'},
+])
+# → pd.DataFrame со стандартными колонками:
+#   text/audio/image, label, source, collected_at
+
+ТРЕБОВАНИЯ
+
+- Минимум 2 источника данных (один — open dataset HuggingFace/Kaggle, один — scraping или API)
+- Унифицированная схема выходного датасета: фиксированные колонки для всех источников
+- EDA: распределение классов, длины текстов / длительность аудио, топ-20 слов / спектрограмма
+- README.md с описанием задачи ML, схемы данных и инструкцией по запуску
+- requirements.txt или pyproject.toml
+
+СТРУКТУРА РЕПОЗИТОРИЯ
+
+- agents/data_collection_agent.py — основной файл агента
+- config.yaml — конфигурация источников
+- notebooks/eda.ipynb — EDA и визуализации
+- data/raw/ — собранные данные
+- README.md
+
+task 2
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ЦЕЛЬ
+
+Написать агента-детектива, который автоматически выявляет и устраняет проблемы качества данных. 
+
+АРХИТЕКТУРА АГЕНТА
+
+- DataQualityAgent
+- skill: detect_issues(df) → QualityReport (missing values, duplicates, outliers, class imbalance)
+- skill: fix(df, strategy: dict) → DataFrame
+- skill: compare(df_before, df_after) → ComparisonReport
+
+ТЕХНИЧЕСКИЙ КОНТРАКТ
+
+from data_quality_agent import DataQualityAgent
+
+agent = DataQualityAgent()
+report = agent.detect_issues(df)
+# → {'missing': {...}, 'duplicates': N, 'outliers': [...], 'imbalance': {...}}
+
+df_clean = agent.fix(df, strategy={
+    'missing': 'median',
+    'duplicates': 'drop',
+    'outliers': 'clip_iqr'
+})
+
+comparison = agent.compare(df, df_clean)
+# → таблица: было / стало по каждой метрике
+
+ТРЕБОВАНИЯ
+
+- Минимум 3 типа проблем: пропущенные значения, дубликаты, выбросы (IQR или z-score)
+- Минимум 2 стратегии чистки на выбор — параметр strategy в методе fix()
+- Сравнительный отчёт до/после по каждой метрике качества
+- Обоснование выбранной стратегии — Markdown-ячейка в ноутбуке
+
+ТРИ ЧАСТИ ЗАДАНИЯ
+
+- Часть 1: Детектив — обнаружить пропуски, выбросы, дубли, дисбаланс классов. Визуализировать каждую проблему.
+- Часть 2: Хирург — применить минимум 2 стратегии чистки, сравнить результаты в таблице.
+- Часть 3: Аргумент — обосновать выбор лучшего подхода: почему эта стратегия лучше для вашей ML-задачи?
+
+БОНУС (+2 балла): Реализовать LLM-скилл — Claude API объясняет найденные проблемы и рекомендует стратегию чистки на основе описания задачи.
+
+task 3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ЦЕЛЬ
+
+Написать агента, который автоматически размечает данные, генерирует спецификацию разметки, оценивает качество и умеет экспортировать задачи для ручной доразметки в LabelStudio. Агент войдёт в пайплайн как auto_label_op.
+
+АРХИТЕКТУРА АГЕНТА
+
+- AnnotationAgent
+- skill: auto_label(df, modality) → DataFrame (text→spaCy/zero-shot, audio→Whisper, image→YOLO)
+- skill: generate_spec(df, task) → AnnotationSpec (Markdown-файл)
+- skill: check_quality(df_labeled) → QualityMetrics (Cohen's κ, label distribution, confidence)
+- skill: export_to_labelstudio(df) → JSON в формате LabelStudio import
+
+ТЕХНИЧЕСКИЙ КОНТРАКТ
+
+from annotation_agent import AnnotationAgent
+
+agent = AnnotationAgent(modality='text')
+df_labeled = agent.auto_label(df)
+
+spec = agent.generate_spec(df, task='sentiment_classification')
+# → annotation_spec.md: задача, классы, примеры, граничные случаи
+
+metrics = agent.check_quality(df_labeled)
+# → {'kappa': 0.72, 'label_dist': {...}, 'confidence_mean': 0.85}
+
+agent.export_to_labelstudio(df_labeled)  # → labelstudio_import.json
+
+ТРЕБОВАНИЯ
+
+- auto_label работает хотя бы для одной модальности (text / audio / image)
+- Спецификация содержит: задача, классы с определениями, 3+ примера на класс, граничные случаи
+- Экспорт в формат LabelStudio — JSON должен загружаться без ошибок
+- Метрики качества: Cohen's κ или % agreement + распределение меток
+- Спецификацию передать однокурснику → он размечает → сравнить его разметку с авторазметкой
+
+БОНУС (+2 балла): Human-in-the-loop — агент автоматически флагает примеры с низкой уверенностью (confidence < threshold) и создаёт отдельный файл для ручной разметки.
+
+task 4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ЦЕЛЬ
+
+Построить агента для умного отбора данных (Active Learning) или сборки мультимодального датасета. Студент выбирает один трек. Агент войдёт в финальный пайплайн как active_learning_op.
+
+━━━ ТРЕК A: ActiveLearningAgent ━━━
+
+АРХИТЕКТУРА
+
+- ActiveLearningAgent
+- skill: fit(labeled_df) → model (обучить базовую модель)
+- skill: query(pool, strategy) → indices (стратегии: 'entropy', 'margin', 'random')
+- skill: evaluate(labeled_df, test_df) → Metrics (accuracy, F1)
+- skill: report(history) → LearningCurve (график quality vs. n_labeled)
+
+ТЕХНИЧЕСКИЙ КОНТРАКТ
+
+from al_agent import ActiveLearningAgent
+
+agent = ActiveLearningAgent(model='logreg')
+
+# Цикл: старт с N=50, 5 итераций по 20 примеров
+history = agent.run_cycle(
+    labeled_df=df_labeled_50,
+    pool_df=df_unlabeled,
+    strategy='entropy',
+    n_iterations=5,
+    batch_size=20
+)
+
+# → history: список {iteration, n_labeled, accuracy, f1}
+agent.report(history)  # → learning_curve.png
+
+ЧТО СДАТЬ (ТРЕК A)
+
+- AL-цикл: старт с N=50 → 5 итераций → финальная модель
+- Сравнение стратегий: entropy vs random — кривые обучения на одном графике
+- Вывод: сколько примеров сэкономлено при том же качестве (accuracy/F1) vs random baseline
+- Файл: agents/al_agent.py + notebooks/al_experiment.ipynb
+
+━━━ ТРЕК B: MultimodalAgent ━━━
+
+АРХИТЕКТУРА
+
+- MultimodalAgent
+- skill: load_modality(path, type) → ModalityData
+- skill: align(modalities: dict, key) → AlignedDataset (выравнивание по общему ID или timestamp)
+- skill: describe(aligned_df) → EDAReport (распределения, примеры, покрытие)
+- skill: export(aligned_df, format) → file (csv / parquet / hf dataset)
+
+ЧТО СДАТЬ (ТРЕК B)
+
+- Датасет с 2+ модальностями (text+audio, text+image, audio+image)
+- Выравнивание по общему ключу (ID / timestamp) — без потери данных
+- EDA: совместное распределение меток по модальностям, пример на каждую пару
+- Описание ML-задачи: как этот датасет будет использован?
+
+КРИТЕРИИ ОЦЕНКИ (оба трека)
+
+- Агент работает, скиллы реализованы — 8 баллов
+- Анализ / сравнение / визуализации — 4 балла
+- README + воспроизводимость (pip install -r requirements.txt && python run.py) — 2 балла
+- Бонус: LLM-скилл (Claude API) в пайплайне — +1 балл
+
+task 5 (final overall)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ЦЕЛЬ
+
+Собрать всех агентов из заданий 1–4 в единый дата-пайплайн с human-in-the-loop. Инструмент оркестрации — на ваш выбор. Главное: пайплайн должен быть единым, воспроизводимым и содержать точки, в которых человек проверяет или правит работу агентов. На выходе — готовый размеченный датасет, обученная модель, итоговый отчёт. Проект — ваше ML-портфолио.
+
+ЛОГИКА ПАЙПЛАЙНА
+
+- Шаг 1: Сбор — DataCollectionAgent собирает данные из 2+ источников
+- Шаг 2: Чистка — DataQualityAgent выявляет и устраняет проблемы
+- Шаг 3: Авторазметка — AnnotationAgent размечает данные автоматически
+- ❗ Human-in-the-loop: агент флагает неуверенные примеры → человек проверяет и правит метки
+- Шаг 4: Отбор — ALAgent выбирает наиболее информативные примеры для разметки
+- Шаг 5: Обучение — модель обучается на размеченных данных
+- Шаг 6: Отчёт — метрики на каждом этапе + ретроспектива
+
+ЧЕМ МОЖНО ОРКЕСТРОВАТЬ ПАЙПЛАЙН
+
+Инструмент оркестрации — на выбор студента. Важно не чем, а то, что пайплайн единый, воспроизводимый и запускается одной командой.
+
+- Python-скрипт (run_pipeline.py) — самый простой вариант: вызов агентов последовательно, сохранение промежуточных результатов в parquet/csv
+- Prefect — лёгкий Python-оркестратор, @flow и @task декораторы, визуальный UI, хорошо подходит для новичков
+- Airflow — популярный пром инструмент для ML-пайплайнов, DAG-архитектура, сложнее в настройке
+- Dagster
+- Metaflow (Netflix) — удобен для ML, поддержка артефактов и версионирования данных
+- Jupyter Notebook (линейный) — приемлемо, если каждый этап оформлен отдельной ячейкой + сохраняет промежуточные файлы
+
+ПРИМЕР НА Prefect (рекомендуем новичкам)
+
+from prefect import flow, task
+from agents.data_collection_agent import DataCollectionAgent
+from agents.data_quality_agent import DataQualityAgent
+from agents.annotation_agent import AnnotationAgent
+from agents.al_agent import ActiveLearningAgent
+
+@task
+def collect(): return DataCollectionAgent().run(...)
+
+@task
+def clean(df): return DataQualityAgent().fix(df, strategy={...})
+
+@task
+def auto_label(df): return AnnotationAgent(modality='text').auto_label(df)
+
+@task
+def human_review(df):
+    # ❗ Человек проверяет флаги confidence < 0.7
+    low_conf = df[df['confidence'] < 0.7]
+    low_conf.to_csv('review_queue.csv')  # человек открывает, правит, возвращает
+    corrected = pd.read_csv('review_queue_corrected.csv')
+    return pd.concat([df[df['confidence'] >= 0.7], corrected])
+
+@task
+def select_for_labeling(df): return ActiveLearningAgent().run_cycle(df, n_iterations=5)
+
+@task
+def train(df):
+    # обучить модель, вернуть метрики
+    ...
+
+@flow
+def data_pipeline():
+    raw = collect()
+    clean_df = clean(raw)
+    labeled = auto_label(clean_df)
+    reviewed = human_review(labeled)    # ← human-in-the-loop
+    al_data = select_for_labeling(reviewed)
+    train(al_data)
+
+❗ HUMAN-IN-THE-LOOP: ЧТО ИМЕННО ПРОВЕРЯЕТ ЧЕЛОВЕК
+
+- После авторазметки: просматривает примеры с confidence < threshold и исправляет ошибочные метки
+- После чистки: проверяет отчёт DataQualityAgent — подтверждает стратегию чистки
+- После AL: вручную размечает отобранные агентом примеры
+- Перед обучением: просматривает итоговый датасет — подтверждает что данные готовы к обучению
+
+ТРЕБОВАНИЯ К СДАЧЕ
+
+- Единый пайплайн: все 4 агента запускаются одной командой (python run_pipeline.py)
+- Human-in-the-loop: минимум 1 явная точка человеческой проверки (не просто запись в лог, а реальная правка)
+- Воспроизводимость: README с инструкцией — проверяем на чистом окружении (pip install + python run.py)
+- Финальный датасет: data/labeled/ — размечен, чистый, с data card
+- Обученная модель + метрики (accuracy/F1 или WER)
+- Итоговый отчёт (README или PDF) — 5 разделов
+
+СТРУКТУРА РЕПОЗИТОРИЯ
+
+- agents/ — все 4 агента из заданий 1–4
+- run_pipeline.py или pipeline/ — основной файл запуска
+- data/raw/ и data/labeled/ — данные
+- review_queue.csv — файл для ручной проверки (human-in-the-loop)
+- models/ — сохранённая модель
+- reports/ — quality_report.md, annotation_report.md, al_report.md
+- README.md — инструкция запуска + data card + описание HITL-точки
+
+ФИНАЛЬНЫЙ ОТЧЁТ (README или PDF) — 5 разделов
+
+- 1. Описание задачи и датасета: модальность, объём, классы
+- 2. Что делал каждый агент: какие решения приняты и почему
+- 3. Описание HITL-точки: сколько примеров проверено, что исправлено
+- 4. Метрики качества на каждом этапе + итоговые метрики модели
+- 5. Ретроспектива: что сработало, что нет, что бы сделал иначе
+
+КРИТЕРИИ ОЦЕНКИ
+
+- Все 4 агента переиспользованы из заданий 1–4 — 10 баллов
+- Пайплайн запускается end-to-end одной командой — 10 баллов
+- Есть реальная HITL-точка (не просто лог, а реальная правка данных) — 8 баллов
+- Обученная модель + метрики (accuracy/F1/WER) — 7 баллов
+- Финальный отчёт: все 5 разделов — 5 баллов
+
+БОНУСЫ
+
+- +3 балла: LLM-агент (Claude API) в пайплайне — например, Claude генерирует спецификацию или объясняет ошибки в данных
+- +2 балла: дашборд Streamlit / Gradio — интерфейс для HITL-разметки или визуализации результатов

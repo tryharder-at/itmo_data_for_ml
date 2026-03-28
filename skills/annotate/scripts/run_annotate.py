@@ -38,6 +38,9 @@ df_high = df_labeled[df_labeled["confidence"] >= thr]
 df_low.to_csv(ROOT / "review_queue.csv", index=False)
 df_labeled.to_csv(ROOT / "data" / "annotations" / "pipeline_annotated.csv", index=False)
 
+# Export to LabelStudio format (tasks 3 & 5 requirement)
+agent.export_to_labelstudio(df_labeled)
+
 print(json.dumps({
     "total": len(df_labeled),
     "high_conf": len(df_high),

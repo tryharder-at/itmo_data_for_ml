@@ -36,17 +36,23 @@ Show the user the detected issues as a table:
 | Outliers | N | X% | clip_iqr |
 | Imbalance | ratio | — | undersample |
 
-**Ask** only if any of these are true:
-- Outliers > 15% of dataset → ask: clip or drop?
-- Imbalance ratio > 2.0 → ask: undersample or oversample?
-- Missing values > 20% → ask: drop rows or fill with empty string?
+**Always ask the user to confirm the strategy** — this is a required human checkpoint (task 5):
 
-If all issues are within normal bounds, use defaults and proceed WITHOUT asking.
+> "The default cleaning strategy is shown above. Confirm to proceed, or specify overrides for any step."
+> - `confirm` / `ok` / Enter → use defaults
+> - Override syntax: e.g. `outliers=drop_iqr` or `imbalance=oversample`
 
-Defaults:
+If the user confirms without changes, use defaults:
 ```json
 {"missing": "drop", "duplicates": "drop", "outliers": "clip_iqr", "imbalance": "undersample"}
 ```
+
+If the user specifies an override (e.g. `outliers=drop_iqr`), substitute that value in the strategy.
+
+When to suggest non-default options proactively (before the user answers):
+- Outliers > 15% → mention `clip_iqr` vs `drop_iqr`
+- Imbalance ratio > 2.0 → mention `undersample` vs `oversample`
+- Missing values > 20% → mention `drop` vs `fill`
 
 ### 3. Run cleaning
 

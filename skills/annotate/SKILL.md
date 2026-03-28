@@ -21,8 +21,9 @@ review of uncertain predictions via a Streamlit UI.
 python skills/annotate/scripts/run_annotate.py
 ```
 
-This labels a stratified sample (up to 100 rows per source) with DistilBERT SST-2.
-Progress is printed to the console.
+This labels a stratified sample (up to 100 rows per source) with DistilBERT SST-2,
+writes `review_queue.csv` for HITL, and exports `data/annotations/labelstudio_import.json`
+for LabelStudio import.
 
 ### 2. Show annotation statistics
 
@@ -66,6 +67,11 @@ python skills/annotate/scripts/merge_labels.py
 
 This merges high-confidence auto-accepted rows with the human-corrected low-confidence rows,
 and saves `data/labeled/final_dataset.csv` + `data/labeled/data_card.md`.
+
+Also tell the user:
+```
+LabelStudio export : data/annotations/labelstudio_import.json
+```
 
 ### 5. Report
 

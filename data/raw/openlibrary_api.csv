@@ -1,0 +1,98 @@
+text,label,source,collected_at
+Heidi,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Babbitt,negative,openlibrary_api,2026-03-27T03:11:12.734871
+White Fang,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Pollyanna,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Ivanhoe,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Waves,positive,openlibrary_api,2026-03-27T03:11:12.734871
+"Villette, a novel",negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Secret Garden,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Scarlet Pimpernel,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Treasure Island,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Ethan Frome,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Hard Times,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Kim,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Middlemarch,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Dracula,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Dubliners,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Enchanted Castle,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Jungle,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Orlando,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Persuasion,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Time Machine,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Vanity Fair,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The blue castle,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Herland,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Jane Eyre,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Invisible Man,negative,openlibrary_api,2026-03-27T03:11:12.734871
+To the Lighthouse,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Awakening,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Scarlet Letter,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Little Women,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Railway Children,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Shirley,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Sea-Wolf,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Great Expectations,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Wind in the Willows,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Peter Pan,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Les Misérables,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Lord Jim,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Emma,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Portrait of a Lady,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The War of the Worlds,positive,openlibrary_api,2026-03-27T03:11:12.734871
+A Little Princess,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Five Children and It,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Frankenstein or The Modern Prometheus,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Мы,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Just So Stories,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Adventures of Tom Sawyer,positive,openlibrary_api,2026-03-27T03:11:12.734871
+This Side of Paradise,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Mrs. Dalloway,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Oliver Twist,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Age of Innocence,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Sense and Sensibility,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Bleak House,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The House of Mirth,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Call of the Wild,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Black Beauty,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Secret Agent,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Of Human Bondage,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Beautiful and Damned,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Kidnapped,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Le roman du masque de fer,positive,openlibrary_api,2026-03-27T03:11:12.734871
+My Ántonia,positive,openlibrary_api,2026-03-27T03:11:12.734871
+On The Road,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Wuthering Heights,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Book of Dragons,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Good Earth,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Sons and Lovers,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Old Curiosity Shop,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Germinal,positive,openlibrary_api,2026-03-27T03:11:12.734871
+A Passage to India,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Notre Dame de Paris,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Story of the Amulet,negative,openlibrary_api,2026-03-27T03:11:12.734871
+King Solomon's Mines,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Yellow Wallpaper,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Cranford,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Anne of Avonlea,positive,openlibrary_api,2026-03-27T03:11:12.734871
+"Tom Sawyer, Detective",positive,openlibrary_api,2026-03-27T03:11:12.734871
+Moby Dick,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Daddy-Long-Legs,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Siddhartha,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Phoenix and the Carpet,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Classic Tale of the Velveteen Rabbit,positive,openlibrary_api,2026-03-27T03:11:12.734871
+David Copperfield,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Last of the Mohicans,negative,openlibrary_api,2026-03-27T03:11:12.734871
+A Tale of Two Cities,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Wonderful Wizard of Oz,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Our Mutual Friend,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The Last Man,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Flatland,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Das Schloß,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Hans Andersen's Fairy Tales,positive,openlibrary_api,2026-03-27T03:11:12.734871
+Rebecca,positive,openlibrary_api,2026-03-27T03:11:12.734871
+A Room with a View,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Women in Love,negative,openlibrary_api,2026-03-27T03:11:12.734871
+Heart of Darkness,negative,openlibrary_api,2026-03-27T03:11:12.734871
+The King in Yellow,positive,openlibrary_api,2026-03-27T03:11:12.734871
+The Princess and the Goblin,negative,openlibrary_api,2026-03-27T03:11:12.734871

@@ -53,15 +53,41 @@ agent.report(
     output_filename="pipeline_learning_curve.png",
 )
 
-# Save model
+# Save the BEST model (by f1_macro), not the last iteration
+best_iter = max(hist_entropy, key=lambda x: x["f1_macro"])
+best_n = best_iter["n_labeled"]
+agent_best = ActiveLearningAgent(
+    model="logreg", text_col="text", label_col="label",
+    random_state=42, output_dir=str(ROOT / "data" / "al"),
+)
+df_best_labeled, _ = train_test_split(
+    df_trainpool, train_size=min(best_n, len(df_trainpool) - 1),
+    stratify=df_trainpool["label"], random_state=42,
+)
+agent_best.fit(df_best_labeled)
 (ROOT / "models").mkdir(parents=True, exist_ok=True)
-joblib.dump(agent._pipeline, ROOT / "models" / "sentiment_model.joblib")
+joblib.dump(agent_best._pipeline, ROOT / "models" / "sentiment_model.joblib")
 
-final = hist_entropy[-1]
 llm_text = agent.explain_with_llm(
     history_list=[hist_entropy, hist_random],
     task_description="Binary sentiment classification on mixed-source text data.",
 )
+
+# Savings analysis: examples needed by entropy vs random to reach the same accuracy
+random_final_acc = hist_random[-1]["accuracy"]
+entropy_crossover = next(
+    (h for h in hist_entropy if h["accuracy"] >= random_final_acc), None
+)
+if entropy_crossover:
+    savings = hist_random[-1]["n_labeled"] - entropy_crossover["n_labeled"]
+    savings_md = (
+        f"- Random reached acc={random_final_acc:.4f} at n={hist_random[-1]['n_labeled']}\n"
+        f"- Entropy reached the same at n={entropy_crossover['n_labeled']}\n"
+        f"- **Examples saved: {savings}** ({savings / hist_random[-1]['n_labeled'] * 100:.1f}%)"
+    )
+else:
+    savings = 0
+    savings_md = "- Entropy did not reach random baseline accuracy within the budget."
 
 # AL report
 hist_df = pd.DataFrame(hist_entropy)[["iteration", "n_labeled", "accuracy", "f1_macro"]]
@@ -82,12 +108,12 @@ Generated: {datetime.datetime.now().isoformat(timespec='seconds')}
 ## Entropy Strategy Results
 {table_md}
 
-## Final Metrics
-| Metric | Value |
-|--------|-------|
-| Accuracy | {final["accuracy"]} |
-| F1-macro | {final["f1_macro"]} |
-| F1-positive | {final["f1_positive"]} |
+## Best Iteration (saved model)
+- Iteration: {best_iter["iteration"]} | N labeled: {best_n}
+- Accuracy: {best_iter["accuracy"]} | F1-macro: {best_iter["f1_macro"]}
+
+## Savings vs Random Baseline
+{savings_md}
 
 ## LLM Analysis (Claude)
 {llm_text}
@@ -96,11 +122,14 @@ Generated: {datetime.datetime.now().isoformat(timespec='seconds')}
 
 print(json.dumps({
     "iterations": hist_entropy,
-    "final_metrics": {
-        "accuracy": final["accuracy"],
-        "f1_macro": final["f1_macro"],
-        "f1_positive": final["f1_positive"],
+    "best_iter": best_iter["iteration"],
+    "best_metrics": {
+        "n_labeled": best_n,
+        "accuracy": best_iter["accuracy"],
+        "f1_macro": best_iter["f1_macro"],
+        "f1_positive": best_iter["f1_positive"],
     },
+    "savings_vs_random": savings,
     "model": "models/sentiment_model.joblib",
     "curve": "data/al/pipeline_learning_curve.png",
     "report": "reports/al_report.md",
